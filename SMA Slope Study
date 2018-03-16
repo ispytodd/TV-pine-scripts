@@ -1,0 +1,37 @@
+//@version=3
+//Multiple SMA Slope in Degrees - Exploring SMA slopes for trend detection and entry/exit/reversal signals
+//v1.0 Mar 16 2018 by SpacedInvader
+//
+//Credits: Based on SMA script by tr_rlstreet https://www.tradingview.com/script/a0o7HVQb-SMA-slope/
+//
+
+study("Multiple SMA Slopes", overlay=false)
+
+
+//Todo
+//-tune trend up/down/sideways bands
+//-improve default SMA settings
+//-convert for strategy inputs/filters, ie. trendingup/trendingdown/sideways
+//-play with 2nd degree, slope of the slops plot, or smooth things out with MAs
+
+
+rad2degree=180/3.14159265359  //pi
+SMA1_len = input(defval=200,title="Slope 1 SMA length",type=integer)
+lookback1=input(defval=10,title="Slope 1 Bars Back",type=integer)
+SMA2_len = input(defval=50,title="Slope 2 SMA length",type=integer)
+lookback2=input(defval=10,title="Slope 2 Bars Back",type=integer)
+
+slope(sma_len,lookback) =>
+    smasample=sma(close,sma_len) 
+    slope=(smasample[0]-nz(smasample[lookback]))/lookback
+    slopeDeg=rad2degree*atan(slope)
+
+slope1 = slope(SMA1_len, lookback1)
+slope2 = slope(SMA2_len, lookback2)
+
+plot(slope1,title="SMA 1 Slope", color=fuchsia, linewidth=3)
+plot(slope2,title="SMA 1 Slope", color=purple, linewidth=2)
+
+//hline(0)
+hline(30)    //trying to identify a trending up, down, and sideways ranges on the slower 200 MA
+hline(-30)
